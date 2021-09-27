@@ -3,16 +3,15 @@ import {request, Router} from 'express';
 import fs from 'fs';
 
 const router = Router();
-let memosArray;
-let memoParsed;
-let memoParsedList;
+//read file and put into variable as a string
 let memoList = fs.readFileSync('log.json', 'utf8', (err, data) => {
-  //  let alreadyRecorded = false;
     if (err) throw err;
     return logFile
 });
-memoParsed = JSON.parse(memoList);
-memoParsedList = memoParsed.memo_list;
+//parse the string into javascript object
+let memoParsed = JSON.parse(memoList);
+//take the list out of the memo_list object
+let memoParsedList = memoParsed.memo_list;
 
 router.post('/', (req, res) => {
     const timeId = new Date().getTime();
@@ -21,18 +20,20 @@ router.post('/', (req, res) => {
         id: timeIdString,
         message: req.body.message
     };
-    console.log(memo);
-
-    console.log(memoParsedList);
+    //converts to javascript object
     memoParsed = JSON.parse(memoList);
+    //takes list out of object
     memoParsedList = memoParsed.memo_list;
-    console.log(memoParsedList);
+    //adding new memo sent by user
     memoParsedList.push(memo);
+    //displays updated list in console
     console.log(memoParsedList);
+    //puts list back in object
     memoParsed = { memo_list: memoParsedList };
+    //turn full and modified object back into a string
     memoList = JSON.stringify(memoParsed);
 
-
+    //write updated string back into original file
     fs.writeFile('log.json', memoList, (err, data) => {
         if (err) throw err;
         console.log('file updated');
