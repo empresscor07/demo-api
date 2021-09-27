@@ -6,9 +6,12 @@ const router = Router();
 //read file and put into variable as a string
 let memoList = fs.readFileSync('log.json', 'utf8', (err, data) => {
     if (err) throw err;
-    return logFile
+    let logFile = data;
+    return logFile;
 });
+
 //parse the string into javascript object
+console.log(memoList);
 let memoParsed = JSON.parse(memoList);
 //take the list out of the memo_list object
 let memoParsedList = memoParsed.memo_list;
